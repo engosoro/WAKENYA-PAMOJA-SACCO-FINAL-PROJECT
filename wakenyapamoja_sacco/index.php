@@ -4,7 +4,7 @@ include("conf/config.php");
 
 
 // Persist system settings from the database
-$ret = "SELECT * FROM `ib_Systemsettings` ";
+$ret = "SELECT * FROM `systemsettings` ";
 $stmt = $mysqli->prepare($ret);
 $stmt->execute(); // Execute the query
 $res = $stmt->get_result(); // Fetch results
@@ -117,13 +117,13 @@ while ($sys = $res->fetch_object()) { // Loop through the settings
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a class="nav-link" target="_blank" href="clientlogin.php">Client Login</a>
+                            <a class="nav-link" target="_blank" href="client/clientlogin.php">Client Login</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" target="_blank" href="stafflogin.php">Staff Login</a>
                         </li>
                                                 <li>
-                            <a class="btn btn-danger" href="clientsignup.php" target="_blank">Join Us</a>
+                            <a class="btn btn-danger" href="client/clientsignup.php" target="_blank">Join Us</a>
                         </li>
                     </ul>
                 </div>
@@ -147,7 +147,7 @@ while ($sys = $res->fetch_object()) { // Loop through the settings
             <p>&copy; <?php echo date('Y'); ?> Wakenya Pamoja Sacco | All Rights Reserved</p>
             <p><a href="mailto:support@wakenyapamoja.com" style="color: #ffcc00;">Contact Support</a></p>
         </footer>
-        <script src="wakenyapamoja_sacco/dist/js/bundle.js"></script>
+        <script src="wakenyapamoja_sacco/client/dist/js/bundle.js"></script>
     </body>
     </html>
 <?php

@@ -2,5 +2,5 @@
     $dbuser="root";
     $dbpass="";
     $host="localhost";
-    $db="internetbanking_db";
+    $db="wakenyapamoja_sacco";
     $mysqli=new mysqli($host,$dbuser, $dbpass, $db);

@@ -4,7 +4,7 @@ include('conf/config.php'); // Get configuration file
 
 // Check if user is logged in
 if (!isset($_SESSION['id'])) {
-    header("location:clientlogin.php"); // Redirect to login if not logged in
+    header("location:client/clientlogin.php"); // Redirect to login if not logged in
     exit();
 }
 
