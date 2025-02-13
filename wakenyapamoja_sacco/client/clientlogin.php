@@ -3,7 +3,7 @@ session_start();
 include('conf/config.php'); // Get configuration file
 
 // Fetch System Settings
-$ret = "SELECT * FROM `iB_SystemSettings`";
+$ret = "SELECT * FROM `systemsettings`";
 $stmt = $mysqli->prepare($ret);
 $stmt->execute();
 $res = $stmt->get_result();

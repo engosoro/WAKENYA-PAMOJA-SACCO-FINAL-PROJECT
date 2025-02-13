@@ -19,32 +19,44 @@ if (isset($_POST['create_account'])) {
 
     // Validate required fields
     if ($name && $national_id && $client_number && $phone && $email && $address) {
-        // Insert Captured information to a database table
-        $query = "INSERT INTO clients (name, nationalid, clientnumber, phonenumber, email, password, address) VALUES (?,?,?,?,?,?,?)";
-        $stmt = $mysqli->prepare($query);
+        // Check if clientnumber or email already exists
+        $check_query = "SELECT * FROM clients WHERE clientnumber=? OR email=?";
+        $check_stmt = $mysqli->prepare($check_query);
+        $check_stmt->bind_param('ss', $client_number, $email);
+        $check_stmt->execute();
+        $check_result = $check_stmt->get_result();
 
-        if ($stmt) {
-            // Bind parameters
-            $stmt->bind_param('sssssss', $name, $national_id, $client_number, $phone, $email, $password, $address);
-            if ($stmt->execute()) {
-                if ($stmt->affected_rows > 0) {
-                    $success = "Account Created Successfully!";
+        if ($check_result->num_rows > 0) {
+            $err = "Client Number or Email already exists.";
+        } else {
+            // Insert Captured information to a database table
+            $query = "INSERT INTO clients (name, nationalid, clientnumber, phonenumber, email, password, address) VALUES (?,?,?,?,?,?,?)";
+            $stmt = $mysqli->prepare($query);
+
+            if ($stmt) {
+                // Bind parameters
+                $stmt->bind_param('sssssss', $name, $national_id, $client_number, $phone, $email, $password, $address);
+                if ($stmt->execute()) {
+                    if ($stmt->affected_rows > 0) {
+                        $success = "Account Created Successfully!";
+                    } else {
+                        $err = "Please Try Again Or Try Later.";
+                    }
                 } else {
-                    $err = "Please Try Again Or Try Later.";
+                    $err = "Execution failed: " . $stmt->error;
                 }
             } else {
-                $err = "Execution failed: " . $stmt->error;
+                $err = "Failed to prepare statement: " . $mysqli->error;
             }
-        } else {
-            $err = "Failed to prepare statement: " . $mysqli->error;
         }
+        $check_stmt->close(); // Close the check statement
     } else {
         $err = "Please fill in all required fields.";
     }
 }
 
 // Fetch System Settings
-$ret = "SELECT * FROM `iB_SystemSettings` ";
+$ret = "SELECT * FROM `systemSettings` ";
 $stmt = $mysqli->prepare($ret);
 $stmt->execute();
 $res = $stmt->get_result();

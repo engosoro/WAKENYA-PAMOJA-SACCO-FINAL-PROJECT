@@ -4,18 +4,37 @@ include('conf/config.php'); // Get configuration file
 
 // Check if user is logged in
 if (!isset($_SESSION['id'])) {
-    header("location:login.php"); // Redirect to login if not logged in
+    header("location:clientlogin.php"); // Redirect to login if not logged in
     exit();
 }
 
 // Fetch client details from the database
 $id = $_SESSION['id'];
-$stmt = $mysqli->prepare("SELECT name, clientnumber, email, phone, balance FROM clients WHERE clientnumber=?");
+
+// Prepare the statement to fetch client details
+$stmt = $mysqli->prepare("SELECT name, clientnumber, email, phonenumber, balance FROM clients WHERE id=?");
 $stmt->bind_param('s', $id);
 $stmt->execute();
-$stmt->bind_result($name, $clientnumber, $email, $phone, $balance);
+$stmt->bind_result($name, $clientnumber, $email, $phonenumber, $balance);
 $stmt->fetch();
 $stmt->close();
+
+// Check if variables are set, otherwise assign default values
+if (!isset($name)) {
+    $name = "Guest"; // Default value if name is not found
+}
+if (!isset($clientnumber)) {
+    $clientnumber = "N/A"; // Default value if client number is not found
+}
+if (!isset($email)) {
+    $email = "N/A"; // Default value if email is not found
+}
+if (!isset($phonenumber)) {
+    $phonenumber = "N/A"; // Default value if phone number is not found
+}
+if (!isset($balance)) {
+    $balance = 0; // Default value if balance is not found
+}
 ?>
 
 <!DOCTYPE html>
@@ -88,7 +107,7 @@ $stmt->close();
         <div class="client-info">
             <p><strong>Client Number:</strong> <?php echo htmlspecialchars($clientnumber); ?></p>
             <p><strong>Email:</strong> <?php echo htmlspecialchars($email); ?></p>
-            <p><strong>Phone Number:</strong> <?php echo htmlspecialchars($phone); ?></p>
+            <p><strong>Phone Number:</strong> <?php echo htmlspecialchars($phonenumber); ?></p>
             <p><strong>Account Balance:</strong> $<?php echo number_format($balance, 2); ?></p>
         </div>
 
